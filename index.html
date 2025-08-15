@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Agent // Holo-Deck</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+        :root {
+            --bg-color: #010413;
+            --primary-color: #00e5ff;
+            --secondary-color: #f100ff;
+            --text-color: #e1faff;
+            --glow-color: rgba(0, 229, 255, 0.8);
+            --border-color: rgba(0, 229, 255, 0.3);
+        }
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 30px -10px var(--glow-color); }
+            50% { box-shadow: 0 0 40px 0px var(--glow-color); }
+        }
+        @keyframes backgroundGrid {
+            0% { background-position: 0 0; }
+            100% { background-position: 50px 50px; }
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: 
+                linear-gradient(var(--border-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border-color) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: backgroundGrid 4s linear infinite; /* Background animation is active */
+        }
+        .main-layout { display: flex; gap: 20px; width: 90%; max-width: 1200px; height: 85vh; }
+        .sidebar { flex-basis: 250px; flex-shrink: 0; background: rgba(9, 21, 64, 0.3); border: 1px solid var(--border-color); padding: 20px; overflow-y: auto; backdrop-filter: blur(10px); display: flex; flex-direction: column; }
+        .sidebar h2 { margin-top: 0; font-size: 1.2em; color: var(--primary-color); text-shadow: 0 0 10px var(--glow-color); }
+        #session-list { list-style: none; padding: 0; margin-top: 15px; flex-grow: 1; }
+        #session-list li a { display: block; padding: 10px; color: var(--text-color); text-decoration: none; border-radius: 4px; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border: 1px solid transparent; font-size: 0.9em; }
+        #session-list li a:hover, #session-list li a.active { background-color: rgba(0, 229, 255, 0.1); border-color: var(--border-color); }
+        .container { flex-grow: 1; padding: 2.5em; background: radial-gradient(circle, rgba(9, 21, 64, 0.8), rgba(2, 4, 27, 0.6)); border: 1px solid var(--border-color); backdrop-filter: blur(10px); display: flex; flex-direction: column; text-align: center; animation: pulseGlow 6s infinite ease-in-out; }
+        #chat-log { flex-grow: 1; background-color: rgba(0, 0, 0, 0.3); border: 1px solid var(--border-color); padding: 15px; margin-bottom: 20px; overflow-y: auto; text-align: left; }
+        .chat-message { margin-bottom: 12px; }
+        .chat-message .role { font-weight: bold; text-transform: uppercase; color: var(--primary-color); margin-bottom: 4px; }
+        h1 { font-size: 2.2em; margin-bottom: 20px; text-transform: uppercase; text-shadow: 0 0 15px var(--glow-color); }
+        .tts-container { margin-top: auto; display: flex; gap: 10px; align-items: center; }
+        #tts-input { flex-grow: 1; background-color: rgba(0, 0, 0, 0.3); border: 1px solid var(--border-color); color: var(--text-color); padding: 12px; font-family: 'Orbitron', sans-serif; }
+        /* Your original glowing button styles */
+        .button {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: #ffffff; border: none; padding: 12px 24px; font-family: 'Orbitron', sans-serif;
+            font-size: 1em; font-weight: bold; text-transform: uppercase; cursor: pointer;
+            transition: all 0.3s ease; box-shadow: 0 0 20px rgba(241, 0, 255, 0.5);
+        }
+        .button:hover:not(:disabled) { transform: scale(1.05); box-shadow: 0 0 35px rgba(0, 229, 255, 0.8); }
+        .button:disabled { cursor: not-allowed; background: #555; box-shadow: none; opacity: 0.6; }
+    </style>
+</head>
+<body>
+    <div class="main-layout">
+        <aside class="sidebar">
+            <h2>Conversations</h2>
+            <button id="new-chat-btn" class="button" style="width: 100%; margin-bottom: 15px;">+ New Chat</button>
+            <ul id="session-list"></ul>
+        </aside>
+
+        <div class="container">
+            <h1>Holo-Deck Interface</h1>
+            <div id="chat-log"></div>
+            <div class="tts-container">
+                <input type="text" id="tts-input" placeholder="Speak or type command...">
+                <button id="record-button" class="button" title="Start Recording">🎤</button>
+                <button id="speak-button" class="button">🔊</button>
+            </div>
+        </div>
+    </div>
+    
+    <audio id="audio-player" style="display: none;"></audio>
+    
+    <script src="script.js" defer></script>
+</body>
+</html>
