@@ -1,92 +1,85 @@
-# 🤖 Holo-Deck Voice Agent
+# 🤖 Enchanted Holo-Deck Voice Agent
 
-A full-stack, conversational AI voice agent built as part of the **#30DaysofVoiceAgents** challenge. This project features a futuristic "Holo-Deck" user interface where users can have multi-turn, contextual conversations with an AI powered by Google's Gemini.
+[![View on GitHub](https://img.shields.io/badge/GitHub-View_Source-blue?logo=github)](https://github.com/adyashaaa28/holo-deck-voice-agent)
+
+A full-stack, conversational AI voice agent built as part of the **#30DaysofVoiceAgents** challenge. This project features a magical "Enchanted Holo-Deck" user interface where users can have multi-turn, contextual conversations with an AI that has a selectable personality and special, real-world skills.
+
+**Live Demo:** **[Link to your Live Deployed App]**
 
 ---
 
 ## ✨ Features
 
--   **🗣️ Voice & Text Conversations:** Interact with the agent using either your voice or by typing.
--   **🧠 Conversational Memory:** The agent remembers previous parts of the conversation within a session, allowing for follow-up questions and contextual understanding.
--   **🔊 AI-Generated Voice Responses:** The agent's replies are spoken back to the user using a Text-to-Speech engine.
--   **📜 Conversation History:** A sidebar displays links to previous chat sessions, allowing you to review them.
--   **🚀 Futuristic UI:** A custom-styled interface with animations and a "Holo-Deck" theme.
+-   **🗣️ Voice & Text Conversations:** Interact with the agent using either your voice (via the browser's Web Speech API) or by typing.
+-   **🎭 Selectable AI Personalities:** Choose from a list of personas (e.g., Helpful Assistant, Pirate Captain) to change the AI's tone and style.
+-   **🧠 Conversational Memory & Persistent History:** The agent remembers the context of your conversation. All chats are saved to a file, so they persist even after the server restarts.
+-   **📜 Conversation History UI:** A sidebar displays links to all previous chat sessions, allowing you to review and reload them.
+-   **🛠️ Special Skills (Gemini Function Calling):** The agent can use tools to answer questions beyond its training data:
+    -   **🌦️ Real-time Weather:** Ask "What's the weather in Tokyo?" to get live weather data.
+    -   **🌐 Live Web Search:** Ask "Who won the latest F1 race?" to get up-to-date information from the internet.
 
 ---
 
 ## 🏛️ Architecture
 
-The application is built on a simple but powerful client-server model.
+The application uses a modern client-server model.
 
--   **Frontend (Client):** A static web interface built with **HTML, CSS, and vanilla JavaScript**. It captures the user's voice using the browser's built-in **Web Speech API** (`SpeechRecognition`) and communicates with the backend via `fetch` requests.
-
--   **Backend (Server):** A **Python** server built with the **FastAPI** framework. It exposes API endpoints to handle the core AI logic.
+-   **Frontend (Client):** A dynamic, single-page application built with **HTML, CSS, and vanilla JavaScript**.
+-   **Backend (Server):** A **Python** server built with the **FastAPI** framework that manages chat state and orchestrates calls to external AI services.
 
 ### Conversational Flow
-The primary conversational loop works as follows:
-`User Voice` -> `Browser (SpeechRecognition)` -> `User Text` -> `FastAPI Backend` -> `Google Gemini API` -> `AI Response Text` -> `gTTS` -> `Audio Output` -> `Browser`
+`User Input (Voice/Text)` -> `JS Frontend` -> `FastAPI Backend` -> `Google Gemini API` -> **[Decides if a Tool is Needed]** -> `[Calls Weather/Search API]` -> `[Returns Data to Gemini]` -> `Final AI Text` -> `gTTS` -> `Audio` -> `JS Frontend`
 
 ---
 
 ## 🛠️ Tech Stack
 
 -   **Backend:** Python 3.9+, FastAPI, Uvicorn
--   **LLM (Language Model):** Google Gemini API (`gemini-1.5-flash`)
+-   **LLM & Function Calling:** Google Gemini API (`gemini-1.5-flash`)
+-   **Special Skills APIs:** Open-Meteo (Weather), Tavily (Web Search)
 -   **Text-to-Speech (TTS):** gTTS (Google Text-to-Speech)
--   **Frontend:** HTML5, CSS3, Vanilla JavaScript
--   **Key Browser APIs:** Web Speech API (`SpeechRecognition`), Fetch API
+-   **Frontend:** HTML5, CSS3, Vanilla JavaScript (Web Speech API)
 
 ---
 
 ## 🚀 How to Run Locally
 
-Follow these steps to set up and run the project on your local machine.
-
 ### 1. Prerequisites
 -   Python 3.9+
--   An API key from [Google AI Studio](https://ai.google.dev/gemini-api/docs/quickstart) for the Gemini API.
+-   API keys for [Google Gemini](https://ai.google.dev/gemini-api/docs/quickstart) and [Tavily AI](https://tavily.com/).
 
-### 2. Backend Setup
-First, set up and run the Python server.
-
+### 2. Setup
 ```bash
-# Clone the repository (replace with your own git repo URL if you have one)
-git clone <your-repo-url>
-cd <your-project-folder>
+# Clone the repository
+git clone [https://github.com/adyashaaa28/holo-deck-voice-agent.git](https://github.com/adyashaaa28/holo-deck-voice-agent.git)
+cd holo-deck-voice-agent
 
-# Create and activate a virtual environment (recommended)
+# Create and activate a virtual environment
 python -m venv venv
-source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
+# On Windows: venv\Scripts\activate
+# On macOS/Linux: source venv/bin/activate
 
 # Install the required dependencies
 pip install -r requirements.txt
 ```
 
 ### 3. Environment Variables
-Create a file named `.env` in the root of your project folder. This file will store your secret API key.
+Create a file named `.env` in the root of your project folder and add your secret API keys.
 
 ```
 # .env
 GEMINI_API_KEY="YOUR_GEMINI_API_KEY_HERE"
+TAVILY_API_KEY="YOUR_TAVILY_API_KEY_HERE"
 ```
 
 ### 4. Running the Application
-This project requires **two terminals** running at the same time.
+This project is configured to run with a **single command**.
 
-**In your first terminal, start the backend server:**
+**In your terminal, start the server:**
 ```bash
-uvicorn app:app --reload
-```
-This will run on `http://127.0.0.1:8000`. Leave it running.
-
-**In your second terminal, start the frontend server:**
-```bash
-# Make sure you are in the same main project folder
-python -m http.server 8001
+uvicorn app.main:app --reload
 ```
 
 ### 5. Access the Holo-Deck
 Open your web browser and navigate to:
-**`http://localhost:8001`**
-
-You can now start a conversation with your voice agent!
+**`http://127.0.0.1:8000`**
